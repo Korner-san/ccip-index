@@ -15,6 +15,8 @@ export type EvidenceType =
   | 'Secondary Reporting'
   | 'Social Post';
 
+export type SourceTier = 'Tier 1' | 'Tier 2' | 'Tier 3';
+
 export type Certainty = 'High' | 'Medium' | 'Low';
 
 export interface MigrationRecord {
@@ -26,8 +28,11 @@ export interface MigrationRecord {
   announced: string;
   reason: string;
   evidenceType: EvidenceType;
+  sourceTier: SourceTier;
   source: string;
   certainty: Certainty;
+  migrationClaim: string;
+  verificationNotes: string;
 }
 
 export interface ResearchPost {
@@ -74,8 +79,13 @@ export const migrations: MigrationRecord[] = [
     announced: '2026-06-04',
     reason: 'Security hardening for AI agent infrastructure',
     evidenceType: 'Official Announcement',
+    sourceTier: 'Tier 1',
     source: 'https://www.prnewswire.com/news-releases/virtuals-protocol-migrates-700m-virtual-token-from-layerzero-to-chainlink-ccip-to-enable-secure-cross-chain-payments-for-ai-agents-302790918.html',
     certainty: 'High',
+    migrationClaim:
+      'Virtuals Protocol announced the migration of its $700M VIRTUAL token bridge from LayerZero to Chainlink CCIP to enable secure cross-chain payments for AI agents.',
+    verificationNotes:
+      'Confirmed via official PR Newswire press release. Multiple major crypto news outlets independently reported the announcement within 24 hours of publication.',
   },
   {
     id: 2,
@@ -86,8 +96,13 @@ export const migrations: MigrationRecord[] = [
     announced: '2026-05-14',
     reason: 'Enterprise-grade security and risk management',
     evidenceType: 'Official Announcement',
+    sourceTier: 'Tier 2',
     source: 'https://www.coindesk.com/business/2026/05/14/kraken-to-replace-layerzero-with-chainlink-to-bridge-assets-across-blockchains',
     certainty: 'High',
+    migrationClaim:
+      'Kraken announced it will replace LayerZero with Chainlink CCIP for bridging assets, including kBTC, across blockchains.',
+    verificationNotes:
+      'Reported by CoinDesk based on direct communication from Kraken. No conflicting reports found at time of indexing. First-party blog post had not been published at time of entry.',
   },
   {
     id: 3,
@@ -98,8 +113,13 @@ export const migrations: MigrationRecord[] = [
     announced: '2026-05-08',
     reason: 'Internal infrastructure review and security evaluation',
     evidenceType: 'Official Announcement',
+    sourceTier: 'Tier 1',
     source: 'https://blog.re.xyz/chainlink-ccip/',
     certainty: 'High',
+    migrationClaim:
+      'Re Protocol confirmed migration to Chainlink CCIP for reUSD cross-chain transfers following an internal infrastructure and security review.',
+    verificationNotes:
+      'Confirmed via Re Protocol\'s official blog at blog.re.xyz. First-party source with direct technical and strategic rationale provided.',
   },
   {
     id: 4,
@@ -110,8 +130,13 @@ export const migrations: MigrationRecord[] = [
     announced: '2026-05-07',
     reason: 'Security review and secure-by-default infrastructure',
     evidenceType: 'Official Announcement',
+    sourceTier: 'Tier 2',
     source: 'https://www.coindesk.com/business/2026/05/07/solv-drops-layerzero-for-chainlink-ccip-in-usd700-million-tokenized-bitcoin-migration',
     certainty: 'High',
+    migrationClaim:
+      'Solv Protocol announced the migration of SolvBTC cross-chain infrastructure from LayerZero to Chainlink CCIP in a $700M tokenized Bitcoin migration.',
+    verificationNotes:
+      'Reported by CoinDesk. Corroborated by Solv Protocol\'s public communications and developer channels. Security review cited as the primary driver of the decision.',
   },
 ];
 
@@ -126,8 +151,13 @@ export const emergingSignals: MigrationRecord[] = [
     announced: '—',
     reason: 'Reported migration signal; no first-party confirmation yet',
     evidenceType: 'Secondary Reporting',
+    sourceTier: 'Tier 3',
     source: '#',
     certainty: 'Medium',
+    migrationClaim:
+      'Kelp DAO reported to be migrating rsETH cross-chain infrastructure from LayerZero to Chainlink CCIP.',
+    verificationNotes:
+      'No official announcement from Kelp DAO found at time of entry. Based on secondary reporting only. No source link available. Requires direct first-party confirmation before promotion to the verified index.',
   },
   {
     id: 102,
@@ -138,8 +168,13 @@ export const emergingSignals: MigrationRecord[] = [
     announced: '—',
     reason: 'Reported migration signal; no first-party confirmation yet',
     evidenceType: 'Secondary Reporting',
+    sourceTier: 'Tier 3',
     source: '#',
     certainty: 'Medium',
+    migrationClaim:
+      'Lombard reported to be migrating LBTC cross-chain infrastructure from LayerZero to Chainlink CCIP.',
+    verificationNotes:
+      'No official announcement from Lombard found at time of entry. Based on secondary reporting only. No source link available. Requires direct first-party confirmation before promotion to the verified index.',
   },
 ];
 
@@ -164,7 +199,7 @@ export const researchPosts: ResearchPost[] = [
     id: 3,
     title: 'Kraken and the Enterprise Signal: What Institutional Migrations Mean',
     summary:
-      'Kraken\'s move from LayerZero to Chainlink CCIP is notable because it is an exchange — not a DeFi protocol. This note explores what enterprise-grade security requirements mean for the migration landscape.',
+      "Kraken's move from LayerZero to Chainlink CCIP is notable because it is an exchange — not a DeFi protocol. This note explores what enterprise-grade security requirements mean for the migration landscape.",
     date: '2026-05-20',
     category: 'Analysis',
   },
@@ -175,7 +210,8 @@ export const evidenceRecords: EvidenceRecord[] = [
     id: 1,
     date: '2026-06-04',
     project: 'Virtuals Protocol',
-    claim: 'Virtuals Protocol announces migration of $700M VIRTUAL token from LayerZero to Chainlink CCIP for AI agent cross-chain payments',
+    claim:
+      'Virtuals Protocol announces migration of $700M VIRTUAL token from LayerZero to Chainlink CCIP for AI agent cross-chain payments',
     sourceType: 'Official Announcement',
     certainty: 'High',
     link: 'https://www.prnewswire.com/news-releases/virtuals-protocol-migrates-700m-virtual-token-from-layerzero-to-chainlink-ccip-to-enable-secure-cross-chain-payments-for-ai-agents-302790918.html',
@@ -184,7 +220,8 @@ export const evidenceRecords: EvidenceRecord[] = [
     id: 2,
     date: '2026-05-14',
     project: 'Kraken',
-    claim: 'Kraken announces replacement of LayerZero with Chainlink CCIP for cross-blockchain asset bridging',
+    claim:
+      'Kraken announces replacement of LayerZero with Chainlink CCIP for cross-blockchain asset bridging',
     sourceType: 'Official Announcement',
     certainty: 'High',
     link: 'https://www.coindesk.com/business/2026/05/14/kraken-to-replace-layerzero-with-chainlink-to-bridge-assets-across-blockchains',
@@ -193,7 +230,8 @@ export const evidenceRecords: EvidenceRecord[] = [
     id: 3,
     date: '2026-05-08',
     project: 'Re Protocol',
-    claim: 'Re Protocol blog confirms migration to Chainlink CCIP following internal security review',
+    claim:
+      'Re Protocol blog confirms migration to Chainlink CCIP following internal security review',
     sourceType: 'Official Announcement',
     certainty: 'High',
     link: 'https://blog.re.xyz/chainlink-ccip/',
@@ -202,7 +240,8 @@ export const evidenceRecords: EvidenceRecord[] = [
     id: 4,
     date: '2026-05-07',
     project: 'Solv Protocol',
-    claim: 'Solv Protocol drops LayerZero for Chainlink CCIP in $700M tokenized Bitcoin migration',
+    claim:
+      'Solv Protocol drops LayerZero for Chainlink CCIP in $700M tokenized Bitcoin migration',
     sourceType: 'Official Announcement',
     certainty: 'High',
     link: 'https://www.coindesk.com/business/2026/05/07/solv-drops-layerzero-for-chainlink-ccip-in-usd700-million-tokenized-bitcoin-migration',
@@ -215,28 +254,28 @@ export const timeline: TimelineMilestone[] = [
     date: 'May 7, 2026',
     title: 'Solv Protocol',
     description:
-      'Solv Protocol announces migration of SolvBTC cross-chain infrastructure from LayerZero to Chainlink CCIP following a security review.',
+      'Solv Protocol announces migration of SolvBTC from LayerZero to Chainlink CCIP following a security review.',
   },
   {
     id: 2,
     date: 'May 8, 2026',
     title: 'Re Protocol',
     description:
-      'Re Protocol confirms Chainlink CCIP migration via official blog post, citing internal infrastructure and security evaluation.',
+      'Re Protocol confirms Chainlink CCIP migration via official blog, citing internal infrastructure and security evaluation.',
   },
   {
     id: 3,
     date: 'May 14, 2026',
     title: 'Kraken',
     description:
-      'Kraken announces it will replace LayerZero with Chainlink CCIP for bridging assets across blockchains — the first major exchange migration.',
+      'Kraken announces LayerZero replacement with Chainlink CCIP — the first major exchange migration recorded in the index.',
   },
   {
     id: 4,
     date: 'Jun 4, 2026',
     title: 'Virtuals Protocol',
     description:
-      'Virtuals Protocol announces migration of $700M VIRTUAL token from LayerZero to Chainlink CCIP for secure AI agent cross-chain payments.',
+      'Virtuals Protocol announces migration of $700M VIRTUAL token from LayerZero to Chainlink CCIP for AI agent cross-chain payments.',
   },
 ];
 
@@ -244,21 +283,24 @@ export const latestChanges: LatestChange[] = [
   {
     id: 1,
     project: 'Virtuals Protocol',
-    update: 'Migration of $700M VIRTUAL token from LayerZero to Chainlink CCIP announced via press release.',
+    update:
+      'Migration of $700M VIRTUAL token from LayerZero to Chainlink CCIP announced via PR Newswire.',
     date: '2026-06-04',
     from: 'LayerZero',
   },
   {
     id: 2,
     project: 'Kraken',
-    update: 'Kraken announces LayerZero replacement with Chainlink CCIP for cross-blockchain bridging.',
+    update:
+      'Kraken announces LayerZero replacement with Chainlink CCIP for cross-blockchain bridging.',
     date: '2026-05-14',
     from: 'LayerZero',
   },
   {
     id: 3,
     project: 'Re Protocol',
-    update: 'Re Protocol confirms Chainlink CCIP migration following internal security evaluation.',
+    update:
+      'Re Protocol confirms Chainlink CCIP migration following internal security evaluation.',
     date: '2026-05-08',
     from: 'LayerZero',
   },
