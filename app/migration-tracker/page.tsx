@@ -5,21 +5,157 @@ export const metadata = {
   title: 'Migration Tracker — CCIP Index',
 };
 
+// ── Derived metrics ────────────────────────────────────────────────────────────
+
+function latestAnnounced(records: typeof migrations): string {
+  const dates = records
+    .map((m) => m.announced)
+    .filter((d) => d !== '—')
+    .sort()
+    .reverse();
+  if (!dates[0]) return '—';
+  const d = new Date(dates[0] + 'T00:00:00');
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+const PROVIDER_GROUPS = ['LayerZero', 'Wormhole', 'Axelar', 'Native Bridge', 'Unknown', 'Other'];
+
+function sourceCounts(records: typeof migrations): Record<string, number> {
+  const counts: Record<string, number> = Object.fromEntries(
+    PROVIDER_GROUPS.map((p) => [p, 0]),
+  );
+  for (const r of records) {
+    const from = r.from;
+    if (PROVIDER_GROUPS.includes(from)) {
+      counts[from]++;
+    } else if (!from || from === 'None' || from === '—') {
+      counts['Unknown']++;
+    } else {
+      counts['Other']++;
+    }
+  }
+  return counts;
+}
+
+// ── Page ───────────────────────────────────────────────────────────────────────
+
 export default function MigrationTrackerPage() {
+  const allRecords = [...migrations, ...emergingSignals];
+
+  // KPI values
+  const verifiedCount = migrations.length;
+  const monitoredCount = allRecords.length;
+  const latestDate = latestAnnounced(migrations);
+  const evidenceSourceCount =
+    allRecords.filter((m) => m.source !== '#').length +
+    allRecords.reduce((acc, m) => acc + (m.supportingXPosts?.length ?? 0), 0);
+
+  // Migration Sources
+  const provCounts = sourceCounts(allRecords);
+  const maxProvCount = Math.max(1, ...Object.values(provCounts));
+
   return (
     <main className="bg-white min-h-screen">
-      {/* Compact page header */}
-      <div className="border-b border-gray-100 bg-white px-4 py-6">
+
+      {/* ── Hero ── */}
+      <div className="border-b border-gray-100 bg-white px-4 py-7">
         <div className="max-w-[1400px] mx-auto">
-          <h1 className="text-xl font-bold text-[#0A2540]">Migration Tracker</h1>
-          <p className="text-sm text-gray-400 mt-1">
-            A public index of verified interoperability migrations to Chainlink CCIP.
+          <h1 className="text-2xl font-bold text-[#0A2540] mb-1">Migration Tracker</h1>
+          <p className="text-sm text-gray-500 max-w-2xl leading-relaxed">
+            CCIP Index independently tracks projects adopting Chainlink CCIP and monitors shifts
+            in cross-chain infrastructure across the crypto ecosystem.
+          </p>
+          <p className="text-[11px] text-gray-400 mt-2 tracking-wide">
+            {verifiedCount} verified migrations&nbsp;&nbsp;•&nbsp;&nbsp;Updated continuously
           </p>
         </div>
       </div>
 
-      <div className="max-w-[1400px] mx-auto px-4 py-6 space-y-8">
-        {/* Evidence quality legend */}
+      <div className="max-w-[1400px] mx-auto px-4 py-6 space-y-6">
+
+        {/* ── KPI Cards ── */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {[
+            {
+              value: String(verifiedCount),
+              label: 'Verified Migrations',
+              desc: 'Tracked migrations to CCIP',
+            },
+            {
+              value: String(monitoredCount),
+              label: 'Projects Monitored',
+              desc: 'Projects currently monitored',
+            },
+            {
+              value: latestDate,
+              label: 'Latest Migration',
+              desc: 'Most recent tracked migration',
+              small: true,
+            },
+            {
+              value: String(evidenceSourceCount),
+              label: 'Evidence Sources',
+              desc: 'Verification sources collected',
+            },
+          ].map((kpi) => (
+            <div
+              key={kpi.label}
+              className="bg-white border border-gray-200 rounded-lg px-4 py-4"
+            >
+              <p
+                className={`font-bold text-[#375BD2] leading-none mb-1 ${
+                  kpi.small ? 'text-xl' : 'text-3xl'
+                }`}
+              >
+                {kpi.value}
+              </p>
+              <p className="text-[11px] font-semibold text-[#0A2540] mt-1">{kpi.label}</p>
+              <p className="text-[11px] text-gray-400 mt-0.5">{kpi.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* ── Migration Sources ── */}
+        <div className="bg-white border border-gray-200 rounded-lg px-5 py-4">
+          <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">
+            Migration Sources
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-2.5">
+            {PROVIDER_GROUPS.map((provider) => {
+              const count = provCounts[provider] ?? 0;
+              const pct = (count / maxProvCount) * 100;
+              return (
+                <div key={provider} className="flex items-center gap-3">
+                  <span className="text-xs text-gray-500 w-28 flex-shrink-0 truncate">
+                    {provider}
+                  </span>
+                  <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    {count > 0 && (
+                      <div
+                        className="h-full rounded-full bg-[#375BD2]"
+                        style={{ width: `${pct}%` }}
+                      />
+                    )}
+                  </div>
+                  <span
+                    className={`text-xs tabular-nums w-4 text-right font-semibold ${
+                      count > 0 ? 'text-[#0A2540]' : 'text-gray-300'
+                    }`}
+                  >
+                    {count}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+          <p className="text-[10px] text-gray-400 mt-4">
+            Includes {verifiedCount} verified migration{verifiedCount !== 1 ? 's' : ''} and{' '}
+            {emergingSignals.length} emerging signal{emergingSignals.length !== 1 ? 's' : ''}.
+            Derived from the &ldquo;From&rdquo; field of each record.
+          </p>
+        </div>
+
+        {/* ── Evidence Quality Legend ── */}
         <div className="rounded border border-gray-100 bg-[#F8F9FC] px-5 py-4">
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">
             Evidence Quality
@@ -55,7 +191,7 @@ export default function MigrationTrackerPage() {
           </div>
         </div>
 
-        {/* Verified migrations */}
+        {/* ── Verified migrations ── */}
         <section>
           <div className="flex items-center gap-3 mb-3">
             <h2 className="text-sm font-semibold text-[#0A2540]">Verified Migrations</h2>
@@ -72,7 +208,7 @@ export default function MigrationTrackerPage() {
           </div>
         </section>
 
-        {/* Emerging signals */}
+        {/* ── Emerging signals ── */}
         <section>
           <div className="flex items-center gap-3 mb-3">
             <h2 className="text-sm font-semibold text-[#0A2540]">Emerging Signals</h2>
@@ -92,6 +228,7 @@ export default function MigrationTrackerPage() {
             </div>
           </div>
         </section>
+
       </div>
     </main>
   );
