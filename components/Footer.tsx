@@ -8,7 +8,7 @@ export default function Footer() {
               CCIP <span className="text-[#375BD2]">Index</span>
             </span>
             <p className="mt-2 text-sm leading-relaxed">
-              A public intelligence dashboard tracking Chainlink CCIP adoption and cross-chain migrations.
+              A public index tracking verified migrations from LayerZero and other interoperability providers to Chainlink CCIP.
             </p>
           </div>
           <div>
@@ -16,8 +16,8 @@ export default function Footer() {
             <ul className="space-y-1.5 text-sm">
               <li><a href="/" className="hover:text-white transition-colors">Home</a></li>
               <li><a href="/migration-tracker" className="hover:text-white transition-colors">Migration Tracker</a></li>
-              <li><a href="/metrics" className="hover:text-white transition-colors">Metrics & Comparisons</a></li>
-              <li><a href="/research" className="hover:text-white transition-colors">Research & Insights</a></li>
+              <li><a href="/metrics" className="hover:text-white transition-colors">Market Map</a></li>
+              <li><a href="/research" className="hover:text-white transition-colors">Evidence Feed</a></li>
               <li><a href="/about" className="hover:text-white transition-colors">About</a></li>
             </ul>
           </div>
@@ -32,8 +32,8 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-8 pt-6 border-t border-[#1a3a5c] text-xs text-gray-500">
-          <p>CCIP Index is for research and information only. Not financial advice. All data is mock in this MVP.</p>
-          <p className="mt-1">&copy; 2026 CCIP Index. All rights reserved.</p>
+          <p>For research purposes only. Not financial advice. Data is mock in this MVP.</p>
+          <p className="mt-1">&copy; 2026 CCIP Index. Not affiliated with Chainlink Labs.</p>
         </div>
       </div>
     </footer>

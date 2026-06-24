@@ -1,30 +1,32 @@
-export type ChangeType = 'Migration' | 'Adoption' | 'Expansion' | 'Evaluation';
-export type Status = 'Announced' | 'In Progress' | 'Live' | 'Deprecated Old Infra' | 'Unverified';
+export type Status =
+  | 'Announced'
+  | 'In Progress'
+  | 'Live'
+  | 'Old Infra Deprecated'
+  | 'Unverified';
+
 export type EvidenceType =
   | 'Official Announcement'
-  | 'Official Documentation'
+  | 'Official Docs'
   | 'Smart Contract'
   | 'Explorer Data'
   | 'Chainlink Source'
   | 'Media Report'
-  | 'Social Post'
-  | 'Multiple Sources';
-export type EvidenceLevel = 'High' | 'Medium' | 'Low';
+  | 'Social Post';
+
+export type Certainty = 'High' | 'Medium' | 'Low';
 
 export interface MigrationRecord {
   id: number;
   project: string;
-  sector: string;
-  asset: string;
   from: string;
   to: string;
-  changeType: ChangeType;
   status: Status;
   announced: string;
-  statedReason: string;
+  reason: string;
   evidenceType: EvidenceType;
-  evidenceLevel: EvidenceLevel;
   source: string;
+  certainty: Certainty;
 }
 
 export interface MetricCard {
@@ -49,10 +51,11 @@ export interface ResearchPost {
 
 export interface EvidenceRecord {
   id: number;
-  sourceType: string;
+  date: string;
   project: string;
   claim: string;
-  evidenceLevel: EvidenceLevel;
+  sourceType: EvidenceType;
+  certainty: Certainty;
   link: string;
 }
 
@@ -68,173 +71,151 @@ export interface LatestChange {
   project: string;
   update: string;
   date: string;
-  type: string;
+  from: string;
 }
 
 export const migrations: MigrationRecord[] = [
   {
     id: 1,
     project: 'Virtuals Protocol',
-    sector: 'Agent Economy',
-    asset: 'VIRTUAL',
     from: 'LayerZero',
     to: 'Chainlink CCIP',
-    changeType: 'Migration',
     status: 'Live',
     announced: '2026-06-10',
-    statedReason: 'Cross-chain standardization and security',
+    reason: 'Cross-chain standardization and improved security model',
     evidenceType: 'Official Announcement',
-    evidenceLevel: 'High',
     source: '#',
+    certainty: 'High',
   },
   {
     id: 2,
     project: 'Solv Protocol',
-    sector: 'BTCFi',
-    asset: 'SolvBTC',
     from: 'LayerZero',
     to: 'Chainlink CCIP',
-    changeType: 'Migration',
     status: 'Live',
     announced: '2026-06-05',
-    statedReason: 'Security review and unified liquidity',
-    evidenceType: 'Multiple Sources',
-    evidenceLevel: 'High',
+    reason: 'Security review triggered migration; unified SolvBTC liquidity across chains',
+    evidenceType: 'Official Announcement',
     source: '#',
+    certainty: 'High',
   },
   {
     id: 3,
     project: 'Re Protocol',
-    sector: 'RWA',
-    asset: 'reUSD',
     from: 'LayerZero',
     to: 'Chainlink CCIP',
-    changeType: 'Migration',
     status: 'Announced',
     announced: '2026-05-20',
-    statedReason: 'Exclusive CCIP integration for RWA compliance',
+    reason: 'Exclusive CCIP integration for reUSD cross-chain transfers',
     evidenceType: 'Official Announcement',
-    evidenceLevel: 'High',
     source: '#',
+    certainty: 'High',
   },
   {
     id: 4,
     project: 'World Chain',
-    sector: 'Infrastructure',
-    asset: 'N/A',
     from: 'None',
     to: 'Chainlink CCIP',
-    changeType: 'Adoption',
     status: 'Live',
     announced: '2026-04-18',
-    statedReason: 'Native cross-chain interoperability at launch',
+    reason: 'CCIP selected as native interoperability layer at chain launch',
     evidenceType: 'Chainlink Source',
-    evidenceLevel: 'High',
     source: '#',
+    certainty: 'High',
   },
   {
     id: 5,
     project: 'Hedera',
-    sector: 'L1',
-    asset: 'N/A',
     from: 'None',
     to: 'Chainlink CCIP',
-    changeType: 'Adoption',
     status: 'In Progress',
     announced: '2026-03-12',
-    statedReason: 'Institutional-grade interoperability',
-    evidenceType: 'Official Documentation',
-    evidenceLevel: 'Medium',
+    reason: 'Institutional-grade cross-chain messaging requirement',
+    evidenceType: 'Official Docs',
     source: '#',
-  },
-];
-
-export const metrics: MetricCard[] = [
-  {
-    label: 'Total Tracked Projects',
-    value: '5',
-    description: 'Projects with verified CCIP activity',
-  },
-  {
-    label: 'Verified Migrations',
-    value: '3',
-    description: 'Projects that moved from another protocol to CCIP',
-  },
-  {
-    label: 'CCIP Adoptions',
-    value: '2',
-    description: 'Projects that adopted CCIP as new infrastructure',
-  },
-  {
-    label: 'Protocols Monitored',
-    value: '4',
-    description: 'Cross-chain protocols under active tracking',
-  },
-  {
-    label: 'High-Confidence Records',
-    value: '4',
-    description: 'Records backed by official announcements',
+    certainty: 'Medium',
   },
 ];
 
 export const interopSnapshot: InteropEntry[] = [
-  { protocol: 'Chainlink CCIP', tracked: 5, color: '#375BD2' },
-  { protocol: 'LayerZero', tracked: 12, color: '#6B7280' },
-  { protocol: 'Wormhole', tracked: 8, color: '#6B7280' },
-  { protocol: 'Axelar', tracked: 6, color: '#6B7280' },
-  { protocol: 'Hyperlane', tracked: 4, color: '#6B7280' },
+  { protocol: 'LayerZero', tracked: 3, color: '#6B7280' },
+  { protocol: 'None (New Adoption)', tracked: 2, color: '#9CA3AF' },
+  { protocol: 'Wormhole', tracked: 0, color: '#D1D5DB' },
+  { protocol: 'Axelar', tracked: 0, color: '#D1D5DB' },
+  { protocol: 'Stargate', tracked: 0, color: '#D1D5DB' },
 ];
 
 export const researchPosts: ResearchPost[] = [
   {
     id: 1,
-    title: 'LayerZero to CCIP: Early Migration Signals',
+    title: 'LayerZero to CCIP: What the Early Migration Pattern Tells Us',
     summary:
-      'An analysis of the first wave of projects moving from LayerZero to Chainlink CCIP, examining the security and standardization arguments driving the trend.',
+      'Three of the first five tracked migrations share the same origin: LayerZero. This note examines whether security posture or ecosystem incentives are the primary driver.',
     date: '2026-06-15',
-    category: 'Migration Analysis',
+    category: 'Migration Pattern',
   },
   {
     id: 2,
-    title: 'Why Cross-Chain Security Became the Main Adoption Driver',
+    title: 'How to Verify a Migration: Evidence Quality and What to Look For',
     summary:
-      'Security incidents and audit findings are accelerating protocol migrations. This report examines how security concerns have overtaken cost as the primary adoption factor.',
+      'Not all migration claims are equal. This guide covers what separates a High-certainty record from a Low-certainty signal, and how on-chain data can confirm or refute a claim.',
     date: '2026-06-10',
-    category: 'Trend Report',
+    category: 'Methodology',
   },
   {
     id: 3,
-    title: 'RWA and Stablecoin Projects Choosing CCIP',
+    title: 'New Adoptions vs. Migrations: Why the Distinction Matters',
     summary:
-      'Real-world asset protocols and stablecoin issuers are disproportionately choosing CCIP. We examine the compliance and reliability factors at play.',
+      'Projects choosing CCIP from day one differ from those actively migrating away from a competitor. Understanding the difference changes how we interpret adoption data.',
     date: '2026-06-05',
-    category: 'Sector Analysis',
+    category: 'Analysis',
   },
 ];
 
 export const evidenceRecords: EvidenceRecord[] = [
   {
     id: 1,
-    sourceType: 'Official Announcement',
+    date: '2026-06-10',
     project: 'Virtuals Protocol',
-    claim: 'VIRTUAL token bridge migrated from LayerZero to Chainlink CCIP',
-    evidenceLevel: 'High',
+    claim: 'Official announcement confirms VIRTUAL bridge moved from LayerZero to Chainlink CCIP',
+    sourceType: 'Official Announcement',
+    certainty: 'High',
     link: '#',
   },
   {
     id: 2,
-    sourceType: 'Multiple Sources',
+    date: '2026-06-05',
     project: 'Solv Protocol',
-    claim: 'SolvBTC infrastructure transitioned to CCIP for improved security',
-    evidenceLevel: 'High',
+    claim: 'Solv Protocol announces SolvBTC cross-chain infrastructure migrated to CCIP after security review',
+    sourceType: 'Official Announcement',
+    certainty: 'High',
     link: '#',
   },
   {
     id: 3,
-    sourceType: 'Official Documentation',
+    date: '2026-05-20',
+    project: 'Re Protocol',
+    claim: 'Re Protocol docs confirm reUSD will use Chainlink CCIP exclusively for cross-chain transfers',
+    sourceType: 'Official Docs',
+    certainty: 'High',
+    link: '#',
+  },
+  {
+    id: 4,
+    date: '2026-04-18',
+    project: 'World Chain',
+    claim: 'Chainlink blog confirms World Chain integrates CCIP as native interoperability layer',
+    sourceType: 'Chainlink Source',
+    certainty: 'High',
+    link: '#',
+  },
+  {
+    id: 5,
+    date: '2026-03-12',
     project: 'Hedera',
-    claim: 'Hedera integrating Chainlink CCIP for enterprise cross-chain messaging',
-    evidenceLevel: 'Medium',
+    claim: 'Hedera developer docs reference CCIP integration for enterprise cross-chain use cases',
+    sourceType: 'Official Docs',
+    certainty: 'Medium',
     link: '#',
   },
 ];
@@ -243,30 +224,30 @@ export const timeline: TimelineMilestone[] = [
   {
     id: 1,
     date: 'Q1 2026',
-    title: 'First Migration Wave',
+    title: 'First Migration Signals',
     description:
-      'Initial cohort of DeFi protocols begin migrating from LayerZero to Chainlink CCIP citing security and standardization.',
+      'Early LayerZero-to-CCIP migration signals emerge. Hedera announces CCIP integration intent.',
   },
   {
     id: 2,
     date: 'Q2 2026',
-    title: 'RWA Sector Joins',
+    title: 'Confirmed Migrations',
     description:
-      'Real-world asset and stablecoin protocols adopt CCIP as preferred interoperability layer.',
+      'Virtuals Protocol, Solv Protocol, and Re Protocol all announce confirmed or in-progress migrations from LayerZero to CCIP.',
   },
   {
     id: 3,
     date: 'Q2 2026',
-    title: 'Enterprise Integrations',
+    title: 'New Chain Adoptions',
     description:
-      'Enterprise-grade networks including Hedera and World Chain announce CCIP support.',
+      'World Chain launches with CCIP as its native interoperability layer — a new adoption rather than a migration.',
   },
   {
     id: 4,
     date: 'Q3 2026',
-    title: 'Index Launch',
+    title: 'Index Goes Live',
     description:
-      'CCIP Index launched to publicly track and verify cross-chain migrations.',
+      'CCIP Index launches to publicly track and verify interoperability provider shifts.',
   },
 ];
 
@@ -274,22 +255,22 @@ export const latestChanges: LatestChange[] = [
   {
     id: 1,
     project: 'Virtuals Protocol',
-    update: 'Migration from LayerZero to Chainlink CCIP confirmed via official announcement.',
-    date: '2026-06-15',
-    type: 'Migration',
+    update: 'Confirmed migration from LayerZero to Chainlink CCIP via official announcement.',
+    date: '2026-06-10',
+    from: 'LayerZero',
   },
   {
     id: 2,
-    project: 'World Chain',
-    update: 'CCIP adoption confirmed for cross-chain interoperability.',
-    date: '2026-06-12',
-    type: 'Adoption',
+    project: 'Solv Protocol',
+    update: 'SolvBTC bridge migrated to CCIP following internal security review.',
+    date: '2026-06-05',
+    from: 'LayerZero',
   },
   {
     id: 3,
-    project: 'Solv Protocol',
-    update: 'SolvBTC bridge infrastructure migrated to CCIP.',
-    date: '2026-06-10',
-    type: 'Migration',
+    project: 'Re Protocol',
+    update: 'reUSD confirmed to use CCIP exclusively per official documentation.',
+    date: '2026-05-20',
+    from: 'LayerZero',
   },
 ];
