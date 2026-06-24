@@ -19,9 +19,16 @@ export type SourceTier = 'Tier 1' | 'Tier 2' | 'Tier 3';
 
 export type Certainty = 'High' | 'Medium' | 'Low';
 
-export interface SupportingSignal {
+export type XPostAccountType =
+  | 'Official Project'
+  | 'Chainlink'
+  | 'Community / Analyst'
+  | 'Media';
+
+export interface SupportingXPost {
   label: string;
   url: string;
+  accountType: XPostAccountType;
 }
 
 export interface MigrationRecord {
@@ -39,7 +46,7 @@ export interface MigrationRecord {
   migrationClaim: string;
   primaryEvidence: string;
   verificationNotes: string;
-  supportingSignals?: SupportingSignal[];
+  supportingXPosts?: SupportingXPost[];
 }
 
 export interface ResearchPost {
@@ -93,9 +100,17 @@ export const migrations: MigrationRecord[] = [
     primaryEvidence: 'PR Newswire press release (June 4, 2026)',
     verificationNotes:
       'Confirmed via official PR Newswire press release. Multiple major crypto news outlets independently reported the announcement within 24 hours of publication.',
-    supportingSignals: [
-      { label: 'Virtuals Protocol', url: 'https://x.com/virtuals_io' },
-      { label: 'Chainlink', url: 'https://x.com/chainlink' },
+    supportingXPosts: [
+      {
+        label: 'Virtuals official migration post',
+        url: 'https://x.com/virtuals_io/status/2062527609255440692',
+        accountType: 'Official Project',
+      },
+      {
+        label: 'Chainlink supporting Virtuals migration post',
+        url: 'https://x.com/chainlink/status/2062526893266538624',
+        accountType: 'Chainlink',
+      },
     ],
   },
   {
@@ -115,9 +130,12 @@ export const migrations: MigrationRecord[] = [
     primaryEvidence: 'CoinDesk article (May 14, 2026)',
     verificationNotes:
       'Reported by CoinDesk based on direct communication from Kraken. No conflicting reports found at time of indexing. First-party blog post not published at time of entry.',
-    supportingSignals: [
-      { label: 'Kraken', url: 'https://x.com/krakenfx' },
-      { label: 'Chainlink', url: 'https://x.com/chainlink' },
+    supportingXPosts: [
+      {
+        label: 'Community/analyst post summarizing Kraken migration',
+        url: 'https://x.com/ChainLinkGod/status/2054945556821393735',
+        accountType: 'Community / Analyst',
+      },
     ],
   },
   {
@@ -137,9 +155,17 @@ export const migrations: MigrationRecord[] = [
     primaryEvidence: 'Official Re Protocol blog post (May 8, 2026)',
     verificationNotes:
       "Confirmed via Re Protocol's official blog at blog.re.xyz. First-party source with direct technical and strategic rationale provided.",
-    supportingSignals: [
-      { label: 'Re Protocol', url: 'https://x.com/re_xyz_' },
-      { label: 'Chainlink', url: 'https://x.com/chainlink' },
+    supportingXPosts: [
+      {
+        label: 'Re official migration post',
+        url: 'https://x.com/re/status/2052735493176168804',
+        accountType: 'Official Project',
+      },
+      {
+        label: 'Chainlink supporting Re migration post',
+        url: 'https://x.com/chainlink/status/2052735890925949419',
+        accountType: 'Chainlink',
+      },
     ],
   },
   {
@@ -159,9 +185,12 @@ export const migrations: MigrationRecord[] = [
     primaryEvidence: 'CoinDesk article (May 7, 2026)',
     verificationNotes:
       "Reported by CoinDesk. Corroborated by Solv Protocol's public communications and developer channels. Security review cited as the primary driver.",
-    supportingSignals: [
-      { label: 'Solv Protocol', url: 'https://x.com/SolvProtocol' },
-      { label: 'Chainlink', url: 'https://x.com/chainlink' },
+    supportingXPosts: [
+      {
+        label: 'Solv Protocol official migration post',
+        url: 'https://x.com/SolvProtocol/status/2052375784569164239',
+        accountType: 'Official Project',
+      },
     ],
   },
 ];
@@ -184,7 +213,7 @@ export const emergingSignals: MigrationRecord[] = [
     primaryEvidence: 'Secondary reporting (unconfirmed)',
     verificationNotes:
       'No official announcement from Kelp DAO found at time of entry. Based on secondary reporting only. Requires direct first-party confirmation before promotion to the verified index.',
-    supportingSignals: [],
+    supportingXPosts: [],
   },
   {
     id: 102,
@@ -203,7 +232,7 @@ export const emergingSignals: MigrationRecord[] = [
     primaryEvidence: 'Secondary reporting (unconfirmed)',
     verificationNotes:
       'No official announcement from Lombard found at time of entry. Based on secondary reporting only. Requires direct first-party confirmation before promotion to the verified index.',
-    supportingSignals: [],
+    supportingXPosts: [],
   },
 ];
 

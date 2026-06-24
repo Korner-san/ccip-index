@@ -2,6 +2,7 @@
 
 import { Fragment, useState } from 'react';
 import type { MigrationRecord } from '@/lib/data';
+import XEmbed from '@/components/XEmbed';
 
 function statusBadge(status: string) {
   const styles: Record<string, string> = {
@@ -76,6 +77,8 @@ export default function MigrationTable({
         <tbody>
           {rows.map((row) => {
             const isExpanded = expandedId === row.id;
+            const xPosts = row.supportingXPosts ?? [];
+
             return (
               <Fragment key={row.id}>
                 <tr
@@ -83,26 +86,19 @@ export default function MigrationTable({
                     isExpanded ? 'bg-blue-50/20' : 'hover:bg-gray-50/80'
                   }`}
                 >
-                  {/* Project */}
                   <td className="px-4 py-3">
                     <span className="font-semibold text-[#0A2540] text-sm whitespace-nowrap">
                       {row.project}
                     </span>
                   </td>
-
-                  {/* From */}
                   <td className="px-4 py-3">
                     <span className="text-xs text-gray-500 whitespace-nowrap">{row.from}</span>
                   </td>
-
-                  {/* To */}
                   <td className="px-4 py-3">
                     <span className="text-xs text-[#375BD2] font-medium whitespace-nowrap">
                       {row.to}
                     </span>
                   </td>
-
-                  {/* Status */}
                   <td className="px-4 py-3 whitespace-nowrap">
                     <span
                       className={`inline-block px-2 py-0.5 rounded text-[11px] font-medium ${statusBadge(
@@ -112,15 +108,11 @@ export default function MigrationTable({
                       {row.status}
                     </span>
                   </td>
-
-                  {/* Announced */}
                   <td className="px-4 py-3">
                     <span className="text-xs text-gray-400 tabular-nums whitespace-nowrap">
                       {row.announced}
                     </span>
                   </td>
-
-                  {/* Evidence toggle */}
                   <td className="px-4 py-3 whitespace-nowrap">
                     <button
                       onClick={() => toggle(row.id)}
@@ -129,8 +121,6 @@ export default function MigrationTable({
                       {isExpanded ? 'Close ▴' : 'View Evidence ▾'}
                     </button>
                   </td>
-
-                  {/* Certainty */}
                   <td className="px-4 py-3 whitespace-nowrap">
                     <span
                       className={`inline-block px-2 py-0.5 rounded text-[11px] font-semibold ${certaintyBadge(
@@ -145,9 +135,11 @@ export default function MigrationTable({
                 {/* Expandable evidence drawer */}
                 {isExpanded && (
                   <tr className="border-b border-gray-200">
-                    <td colSpan={7} className="bg-[#F8F9FC] px-5 py-5">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5 text-xs">
-                        {/* Left: claim + primary evidence */}
+                    <td colSpan={7} className="bg-[#F8F9FC] px-5 py-6">
+
+                      {/* ── Text metadata ── */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5 text-xs mb-6">
+                        {/* Left column */}
                         <div className="space-y-4">
                           <div>
                             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">
@@ -189,29 +181,8 @@ export default function MigrationTable({
                           </div>
                         </div>
 
-                        {/* Right: supporting signals + verification + confidence */}
+                        {/* Right column */}
                         <div className="space-y-4">
-                          {row.supportingSignals && row.supportingSignals.length > 0 && (
-                            <div>
-                              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">
-                                Supporting Signals
-                              </p>
-                              <div className="flex flex-wrap gap-x-4 gap-y-1">
-                                {row.supportingSignals.map((signal) => (
-                                  <a
-                                    key={signal.label}
-                                    href={signal.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-gray-500 hover:text-[#375BD2] transition-colors font-medium"
-                                  >
-                                    𝕏 {signal.label}
-                                  </a>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
                           <div>
                             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">
                               Verification Notes
@@ -238,6 +209,20 @@ export default function MigrationTable({
                           </div>
                         </div>
                       </div>
+
+                      {/* ── Supporting X Signals ── */}
+                      {xPosts.length > 0 && (
+                        <div className="border-t border-gray-200 pt-5">
+                          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
+                            Supporting X Signals
+                          </p>
+                          <p className="text-[11px] text-gray-400 mb-4">
+                            X posts are supporting signals. Primary verification comes from the listed evidence source.
+                          </p>
+                          <XEmbed posts={xPosts} />
+                        </div>
+                      )}
+
                     </td>
                   </tr>
                 )}
