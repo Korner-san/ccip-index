@@ -7,9 +7,6 @@ import { useState } from 'react';
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/migration-tracker', label: 'Migration Tracker' },
-  { href: '/metrics', label: 'Market Map' },
-  { href: '/research', label: 'Evidence Feed' },
-  { href: '/about', label: 'About' },
 ];
 
 export default function Header() {
@@ -17,23 +14,23 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="bg-[#0A2540] text-white sticky top-0 z-50 shadow-lg">
+    <header className="bg-[#0A2540] text-white sticky top-0 z-50 border-b border-[#1a3a5c]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-14">
           <Link href="/" className="flex items-center gap-2">
-            <span className="font-bold text-xl tracking-tight">
+            <span className="font-bold text-lg tracking-tight">
               CCIP <span className="text-[#375BD2]">Index</span>
             </span>
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-colors hover:text-[#375BD2] ${
-                  pathname === link.href ? 'text-[#375BD2]' : 'text-gray-300'
+                className={`text-sm font-medium transition-colors hover:text-white ${
+                  pathname === link.href ? 'text-white' : 'text-gray-400'
                 }`}
               >
                 {link.label}
@@ -43,11 +40,11 @@ export default function Header() {
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden text-gray-300 hover:text-white p-1"
+            className="md:hidden text-gray-400 hover:text-white p-1"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"
           >
-            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               {menuOpen ? (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               ) : (
@@ -64,8 +61,8 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`block py-2 text-sm font-medium transition-colors hover:text-[#375BD2] ${
-                  pathname === link.href ? 'text-[#375BD2]' : 'text-gray-300'
+                className={`block py-2 text-sm font-medium transition-colors hover:text-white ${
+                  pathname === link.href ? 'text-white' : 'text-gray-400'
                 }`}
                 onClick={() => setMenuOpen(false)}
               >

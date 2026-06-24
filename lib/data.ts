@@ -19,6 +19,11 @@ export type SourceTier = 'Tier 1' | 'Tier 2' | 'Tier 3';
 
 export type Certainty = 'High' | 'Medium' | 'Low';
 
+export interface SupportingSignal {
+  label: string;
+  url: string;
+}
+
 export interface MigrationRecord {
   id: number;
   project: string;
@@ -32,7 +37,9 @@ export interface MigrationRecord {
   source: string;
   certainty: Certainty;
   migrationClaim: string;
+  primaryEvidence: string;
   verificationNotes: string;
+  supportingSignals?: SupportingSignal[];
 }
 
 export interface ResearchPost {
@@ -68,7 +75,6 @@ export interface LatestChange {
   from: string;
 }
 
-// Verified migrations — backed by official announcements or primary sources.
 export const migrations: MigrationRecord[] = [
   {
     id: 1,
@@ -84,8 +90,13 @@ export const migrations: MigrationRecord[] = [
     certainty: 'High',
     migrationClaim:
       'Virtuals Protocol announced the migration of its $700M VIRTUAL token bridge from LayerZero to Chainlink CCIP to enable secure cross-chain payments for AI agents.',
+    primaryEvidence: 'PR Newswire press release (June 4, 2026)',
     verificationNotes:
       'Confirmed via official PR Newswire press release. Multiple major crypto news outlets independently reported the announcement within 24 hours of publication.',
+    supportingSignals: [
+      { label: 'Virtuals Protocol', url: 'https://x.com/virtuals_io' },
+      { label: 'Chainlink', url: 'https://x.com/chainlink' },
+    ],
   },
   {
     id: 2,
@@ -95,14 +106,19 @@ export const migrations: MigrationRecord[] = [
     status: 'Announced',
     announced: '2026-05-14',
     reason: 'Enterprise-grade security and risk management',
-    evidenceType: 'Official Announcement',
+    evidenceType: 'Media Report',
     sourceTier: 'Tier 2',
     source: 'https://www.coindesk.com/business/2026/05/14/kraken-to-replace-layerzero-with-chainlink-to-bridge-assets-across-blockchains',
     certainty: 'High',
     migrationClaim:
       'Kraken announced it will replace LayerZero with Chainlink CCIP for bridging assets, including kBTC, across blockchains.',
+    primaryEvidence: 'CoinDesk article (May 14, 2026)',
     verificationNotes:
-      'Reported by CoinDesk based on direct communication from Kraken. No conflicting reports found at time of indexing. First-party blog post had not been published at time of entry.',
+      'Reported by CoinDesk based on direct communication from Kraken. No conflicting reports found at time of indexing. First-party blog post not published at time of entry.',
+    supportingSignals: [
+      { label: 'Kraken', url: 'https://x.com/krakenfx' },
+      { label: 'Chainlink', url: 'https://x.com/chainlink' },
+    ],
   },
   {
     id: 3,
@@ -118,8 +134,13 @@ export const migrations: MigrationRecord[] = [
     certainty: 'High',
     migrationClaim:
       'Re Protocol confirmed migration to Chainlink CCIP for reUSD cross-chain transfers following an internal infrastructure and security review.',
+    primaryEvidence: 'Official Re Protocol blog post (May 8, 2026)',
     verificationNotes:
-      'Confirmed via Re Protocol\'s official blog at blog.re.xyz. First-party source with direct technical and strategic rationale provided.',
+      "Confirmed via Re Protocol's official blog at blog.re.xyz. First-party source with direct technical and strategic rationale provided.",
+    supportingSignals: [
+      { label: 'Re Protocol', url: 'https://x.com/re_xyz_' },
+      { label: 'Chainlink', url: 'https://x.com/chainlink' },
+    ],
   },
   {
     id: 4,
@@ -129,18 +150,22 @@ export const migrations: MigrationRecord[] = [
     status: 'Announced',
     announced: '2026-05-07',
     reason: 'Security review and secure-by-default infrastructure',
-    evidenceType: 'Official Announcement',
+    evidenceType: 'Media Report',
     sourceTier: 'Tier 2',
     source: 'https://www.coindesk.com/business/2026/05/07/solv-drops-layerzero-for-chainlink-ccip-in-usd700-million-tokenized-bitcoin-migration',
     certainty: 'High',
     migrationClaim:
       'Solv Protocol announced the migration of SolvBTC cross-chain infrastructure from LayerZero to Chainlink CCIP in a $700M tokenized Bitcoin migration.',
+    primaryEvidence: 'CoinDesk article (May 7, 2026)',
     verificationNotes:
-      'Reported by CoinDesk. Corroborated by Solv Protocol\'s public communications and developer channels. Security review cited as the primary driver of the decision.',
+      "Reported by CoinDesk. Corroborated by Solv Protocol's public communications and developer channels. Security review cited as the primary driver.",
+    supportingSignals: [
+      { label: 'Solv Protocol', url: 'https://x.com/SolvProtocol' },
+      { label: 'Chainlink', url: 'https://x.com/chainlink' },
+    ],
   },
 ];
 
-// Emerging signals — secondary reporting only; require first-party verification.
 export const emergingSignals: MigrationRecord[] = [
   {
     id: 101,
@@ -156,8 +181,10 @@ export const emergingSignals: MigrationRecord[] = [
     certainty: 'Medium',
     migrationClaim:
       'Kelp DAO reported to be migrating rsETH cross-chain infrastructure from LayerZero to Chainlink CCIP.',
+    primaryEvidence: 'Secondary reporting (unconfirmed)',
     verificationNotes:
-      'No official announcement from Kelp DAO found at time of entry. Based on secondary reporting only. No source link available. Requires direct first-party confirmation before promotion to the verified index.',
+      'No official announcement from Kelp DAO found at time of entry. Based on secondary reporting only. Requires direct first-party confirmation before promotion to the verified index.',
+    supportingSignals: [],
   },
   {
     id: 102,
@@ -173,8 +200,10 @@ export const emergingSignals: MigrationRecord[] = [
     certainty: 'Medium',
     migrationClaim:
       'Lombard reported to be migrating LBTC cross-chain infrastructure from LayerZero to Chainlink CCIP.',
+    primaryEvidence: 'Secondary reporting (unconfirmed)',
     verificationNotes:
-      'No official announcement from Lombard found at time of entry. Based on secondary reporting only. No source link available. Requires direct first-party confirmation before promotion to the verified index.',
+      'No official announcement from Lombard found at time of entry. Based on secondary reporting only. Requires direct first-party confirmation before promotion to the verified index.',
+    supportingSignals: [],
   },
 ];
 
@@ -222,7 +251,7 @@ export const evidenceRecords: EvidenceRecord[] = [
     project: 'Kraken',
     claim:
       'Kraken announces replacement of LayerZero with Chainlink CCIP for cross-blockchain asset bridging',
-    sourceType: 'Official Announcement',
+    sourceType: 'Media Report',
     certainty: 'High',
     link: 'https://www.coindesk.com/business/2026/05/14/kraken-to-replace-layerzero-with-chainlink-to-bridge-assets-across-blockchains',
   },
@@ -242,7 +271,7 @@ export const evidenceRecords: EvidenceRecord[] = [
     project: 'Solv Protocol',
     claim:
       'Solv Protocol drops LayerZero for Chainlink CCIP in $700M tokenized Bitcoin migration',
-    sourceType: 'Official Announcement',
+    sourceType: 'Media Report',
     certainty: 'High',
     link: 'https://www.coindesk.com/business/2026/05/07/solv-drops-layerzero-for-chainlink-ccip-in-usd700-million-tokenized-bitcoin-migration',
   },

@@ -5,13 +5,22 @@ import type { MigrationRecord } from '@/lib/data';
 
 function statusBadge(status: string) {
   const styles: Record<string, string> = {
-    Live:                 'bg-green-50 text-green-700 border border-green-100',
-    Announced:            'bg-sky-50 text-sky-700 border border-sky-100',
-    'In Progress':        'bg-amber-50 text-amber-700 border border-amber-100',
+    Live:                   'bg-green-50 text-green-700 border border-green-100',
+    Announced:              'bg-sky-50 text-sky-700 border border-sky-100',
+    'In Progress':          'bg-amber-50 text-amber-700 border border-amber-100',
     'Old Infra Deprecated': 'bg-slate-100 text-slate-500 border border-slate-200',
-    Unverified:           'bg-orange-50 text-orange-600 border border-orange-100',
+    Unverified:             'bg-orange-50 text-orange-600 border border-orange-100',
   };
   return styles[status] ?? 'bg-gray-100 text-gray-500';
+}
+
+function certaintyBadge(certainty: string) {
+  const styles: Record<string, string> = {
+    High:   'bg-green-50 text-green-700 border border-green-100',
+    Medium: 'bg-amber-50 text-amber-700 border border-amber-100',
+    Low:    'bg-red-50 text-red-600 border border-red-100',
+  };
+  return styles[certainty] ?? 'bg-gray-100 text-gray-500';
 }
 
 function evidenceTypeBadge(type: string) {
@@ -28,28 +37,10 @@ function evidenceTypeBadge(type: string) {
   return styles[type] ?? 'bg-gray-100 text-gray-500';
 }
 
-function sourceTierBadge(tier: string) {
-  const styles: Record<string, string> = {
-    'Tier 1': 'bg-[#375BD2]/10 text-[#375BD2] border border-[#375BD2]/20',
-    'Tier 2': 'bg-amber-50 text-amber-700 border border-amber-100',
-    'Tier 3': 'bg-orange-50 text-orange-600 border border-orange-100',
-  };
-  return styles[tier] ?? 'bg-gray-100 text-gray-500';
-}
-
-function certaintyBadge(certainty: string) {
-  const styles: Record<string, string> = {
-    High:   'bg-green-50 text-green-700 border border-green-100',
-    Medium: 'bg-amber-50 text-amber-700 border border-amber-100',
-    Low:    'bg-red-50 text-red-600 border border-red-100',
-  };
-  return styles[certainty] ?? 'bg-gray-100 text-gray-500';
-}
-
 const certaintyExplanations: Record<string, string> = {
-  High:   'Confirmed by official first-party announcement, documentation, or verified on-chain evidence.',
-  Medium: 'Supported by reputable secondary reporting or block explorer data. Not directly confirmed by the project itself.',
-  Low:    'Early signal only. Social media post, rumor, or incomplete evidence. Not verified.',
+  High:   'Official announcement, official documentation, onchain evidence, or multiple independent confirmations.',
+  Medium: 'Reputable secondary reporting or explorer evidence without direct first-party confirmation.',
+  Low:    'Early signals, social posts, or incomplete verification. Listed for transparency only.',
 };
 
 export default function MigrationTable({
@@ -67,25 +58,19 @@ export default function MigrationTable({
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-sm" style={{ minWidth: '1100px' }}>
+      <table className="w-full" style={{ minWidth: '760px' }}>
         <thead>
-          <tr
-            className={`border-b border-gray-100 ${
-              dim ? 'bg-gray-50' : 'bg-[#F5F6FA]'
-            } text-[#0A2540]`}
-          >
-            <th className="text-left px-4 py-3 font-semibold whitespace-nowrap">Project</th>
-            <th className="text-left px-4 py-3 font-semibold whitespace-nowrap">From</th>
-            <th className="text-left px-4 py-3 font-semibold whitespace-nowrap">To</th>
-            <th className="text-left px-4 py-3 font-semibold whitespace-nowrap">Status</th>
-            <th className="text-left px-4 py-3 font-semibold whitespace-nowrap">Announced</th>
-            <th className="text-left px-4 py-3 font-semibold" style={{ minWidth: '180px' }}>
-              Reason
-            </th>
-            <th className="text-left px-4 py-3 font-semibold whitespace-nowrap">Evidence Type</th>
-            <th className="text-left px-4 py-3 font-semibold whitespace-nowrap">Source Tier</th>
-            <th className="text-left px-4 py-3 font-semibold whitespace-nowrap">Evidence</th>
-            <th className="text-left px-4 py-3 font-semibold whitespace-nowrap">Certainty</th>
+          <tr className={`border-b border-gray-200 ${dim ? 'bg-gray-50' : 'bg-white'}`}>
+            {['Project', 'From', 'To', 'Status', 'Announced', 'Evidence', 'Certainty'].map(
+              (col) => (
+                <th
+                  key={col}
+                  className="text-left px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-gray-400 whitespace-nowrap"
+                >
+                  {col}
+                </th>
+              ),
+            )}
           </tr>
         </thead>
         <tbody>
@@ -94,35 +79,33 @@ export default function MigrationTable({
             return (
               <Fragment key={row.id}>
                 <tr
-                  className={`border-b border-gray-50 transition-colors ${
-                    isExpanded ? 'bg-blue-50/30' : 'hover:bg-[#F5F6FA]/60'
+                  className={`border-b border-gray-100 transition-colors ${
+                    isExpanded ? 'bg-blue-50/20' : 'hover:bg-gray-50/80'
                   }`}
                 >
                   {/* Project */}
-                  <td className="px-4 py-3 font-semibold text-[#0A2540] whitespace-nowrap">
-                    {row.project}
-                  </td>
-
-                  {/* From */}
-                  <td className="px-4 py-3 whitespace-nowrap">
-                    <span
-                      className={`text-xs font-medium ${
-                        row.from === 'None' ? 'text-gray-400 italic' : 'text-gray-600'
-                      }`}
-                    >
-                      {row.from}
+                  <td className="px-4 py-3">
+                    <span className="font-semibold text-[#0A2540] text-sm whitespace-nowrap">
+                      {row.project}
                     </span>
                   </td>
 
+                  {/* From */}
+                  <td className="px-4 py-3">
+                    <span className="text-xs text-gray-500 whitespace-nowrap">{row.from}</span>
+                  </td>
+
                   {/* To */}
-                  <td className="px-4 py-3 text-[#375BD2] font-medium whitespace-nowrap text-xs">
-                    {row.to}
+                  <td className="px-4 py-3">
+                    <span className="text-xs text-[#375BD2] font-medium whitespace-nowrap">
+                      {row.to}
+                    </span>
                   </td>
 
                   {/* Status */}
                   <td className="px-4 py-3 whitespace-nowrap">
                     <span
-                      className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${statusBadge(
+                      className={`inline-block px-2 py-0.5 rounded text-[11px] font-medium ${statusBadge(
                         row.status,
                       )}`}
                     >
@@ -131,65 +114,26 @@ export default function MigrationTable({
                   </td>
 
                   {/* Announced */}
-                  <td className="px-4 py-3 text-gray-400 text-xs whitespace-nowrap tabular-nums">
-                    {row.announced}
-                  </td>
-
-                  {/* Reason */}
-                  <td className="px-4 py-3 text-gray-500 text-xs leading-relaxed">
-                    {row.reason}
-                  </td>
-
-                  {/* Evidence Type */}
-                  <td className="px-4 py-3 whitespace-nowrap">
-                    <span
-                      className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${evidenceTypeBadge(
-                        row.evidenceType,
-                      )}`}
-                    >
-                      {row.evidenceType}
+                  <td className="px-4 py-3">
+                    <span className="text-xs text-gray-400 tabular-nums whitespace-nowrap">
+                      {row.announced}
                     </span>
                   </td>
 
-                  {/* Source Tier */}
+                  {/* Evidence toggle */}
                   <td className="px-4 py-3 whitespace-nowrap">
-                    <span
-                      className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${sourceTierBadge(
-                        row.sourceTier,
-                      )}`}
+                    <button
+                      onClick={() => toggle(row.id)}
+                      className="text-[11px] font-semibold text-[#375BD2] border border-[#375BD2]/40 rounded px-2.5 py-1 hover:bg-[#375BD2]/5 transition-colors cursor-pointer"
                     >
-                      {row.sourceTier}
-                    </span>
-                  </td>
-
-                  {/* Evidence — View Evidence + View Details buttons */}
-                  <td className="px-4 py-3 whitespace-nowrap">
-                    <div className="flex flex-col gap-1">
-                      {row.source !== '#' ? (
-                        <a
-                          href={row.source}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[#375BD2] hover:underline text-xs font-medium"
-                        >
-                          View Evidence ↗
-                        </a>
-                      ) : (
-                        <span className="text-gray-300 text-xs">No source</span>
-                      )}
-                      <button
-                        onClick={() => toggle(row.id)}
-                        className="text-left text-gray-400 hover:text-[#375BD2] text-xs font-medium transition-colors cursor-pointer"
-                      >
-                        {isExpanded ? 'View Details ▴' : 'View Details ▾'}
-                      </button>
-                    </div>
+                      {isExpanded ? 'Close ▴' : 'View Evidence ▾'}
+                    </button>
                   </td>
 
                   {/* Certainty */}
                   <td className="px-4 py-3 whitespace-nowrap">
                     <span
-                      className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${certaintyBadge(
+                      className={`inline-block px-2 py-0.5 rounded text-[11px] font-semibold ${certaintyBadge(
                         row.certainty,
                       )}`}
                     >
@@ -198,77 +142,100 @@ export default function MigrationTable({
                   </td>
                 </tr>
 
-                {/* Expandable detail row */}
+                {/* Expandable evidence drawer */}
                 {isExpanded && (
-                  <tr className="border-b border-gray-100">
-                    <td colSpan={10} className="bg-[#F5F6FA] px-6 py-5">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
-                        {/* Migration Claim */}
-                        <div>
-                          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                            Migration Claim
-                          </p>
-                          <p className="text-[#0A2540] leading-relaxed mb-3">{row.migrationClaim}</p>
-                          {row.source !== '#' && (
-                            <a
-                              href={row.source}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 text-[#375BD2] hover:underline font-medium"
-                            >
-                              View Primary Source ↗
-                            </a>
-                          )}
-                        </div>
+                  <tr className="border-b border-gray-200">
+                    <td colSpan={7} className="bg-[#F8F9FC] px-5 py-5">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5 text-xs">
+                        {/* Left: claim + primary evidence */}
+                        <div className="space-y-4">
+                          <div>
+                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">
+                              Migration Claim
+                            </p>
+                            <p className="text-[#0A2540] leading-relaxed">{row.migrationClaim}</p>
+                          </div>
 
-                        {/* Source Details */}
-                        <div>
-                          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                            Source Details
-                          </p>
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="text-gray-400">Type:</span>
+                          <div>
+                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">
+                              Primary Evidence
+                            </p>
+                            <p className="text-gray-600 mb-2">{row.primaryEvidence}</p>
+                            {row.source !== '#' ? (
+                              <a
+                                href={row.source}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[#375BD2] hover:underline font-medium"
+                              >
+                                View external source ↗
+                              </a>
+                            ) : (
+                              <span className="text-gray-300">No source link available</span>
+                            )}
+                          </div>
+
+                          <div>
+                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">
+                              Source Type
+                            </p>
                             <span
-                              className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${evidenceTypeBadge(
+                              className={`inline-block px-2 py-0.5 rounded text-[11px] font-medium ${evidenceTypeBadge(
                                 row.evidenceType,
                               )}`}
                             >
                               {row.evidenceType}
                             </span>
                           </div>
-                          <div className="flex items-center gap-2 mb-3">
-                            <span className="text-gray-400">Tier:</span>
-                            <span
-                              className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${sourceTierBadge(
-                                row.sourceTier,
-                              )}`}
-                            >
-                              {row.sourceTier}
-                            </span>
-                          </div>
-                          <p className="text-gray-400 uppercase tracking-wider font-semibold mb-1">
-                            Verification Notes
-                          </p>
-                          <p className="text-gray-500 leading-relaxed">{row.verificationNotes}</p>
                         </div>
 
-                        {/* Certainty */}
-                        <div>
-                          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                            Certainty
-                          </p>
-                          <div className="flex items-center gap-2 mb-2">
-                            <span
-                              className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${certaintyBadge(
-                                row.certainty,
-                              )}`}
-                            >
-                              {row.certainty}
-                            </span>
+                        {/* Right: supporting signals + verification + confidence */}
+                        <div className="space-y-4">
+                          {row.supportingSignals && row.supportingSignals.length > 0 && (
+                            <div>
+                              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">
+                                Supporting Signals
+                              </p>
+                              <div className="flex flex-wrap gap-x-4 gap-y-1">
+                                {row.supportingSignals.map((signal) => (
+                                  <a
+                                    key={signal.label}
+                                    href={signal.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-500 hover:text-[#375BD2] transition-colors font-medium"
+                                  >
+                                    𝕏 {signal.label}
+                                  </a>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          <div>
+                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">
+                              Verification Notes
+                            </p>
+                            <p className="text-gray-500 leading-relaxed">{row.verificationNotes}</p>
                           </div>
-                          <p className="text-gray-500 leading-relaxed">
-                            {certaintyExplanations[row.certainty]}
-                          </p>
+
+                          <div>
+                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">
+                              Confidence
+                            </p>
+                            <div className="flex items-start gap-2.5">
+                              <span
+                                className={`flex-shrink-0 inline-block px-2 py-0.5 rounded text-[11px] font-semibold mt-0.5 ${certaintyBadge(
+                                  row.certainty,
+                                )}`}
+                              >
+                                {row.certainty}
+                              </span>
+                              <span className="text-gray-400 leading-relaxed">
+                                {certaintyExplanations[row.certainty]}
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </td>
