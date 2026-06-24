@@ -96,9 +96,9 @@ export default function ResearchPage() {
                           <td className="px-4 py-3 text-gray-500">{ev.claim}</td>
                           <td className="px-4 py-3 whitespace-nowrap">
                             <span
-                              className={`px-2 py-0.5 rounded-full text-xs font-medium ${confidenceBadge(ev.confidence)}`}
+                              className={`px-2 py-0.5 rounded-full text-xs font-medium ${confidenceBadge(ev.evidenceLevel)}`}
                             >
-                              {ev.confidence}
+                              {ev.evidenceLevel}
                             </span>
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">

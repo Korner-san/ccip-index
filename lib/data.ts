@@ -1,18 +1,30 @@
-export type ChangeType = 'Migration' | 'Adoption' | 'Expansion';
-export type Confidence = 'High' | 'Medium' | 'Low';
+export type ChangeType = 'Migration' | 'Adoption' | 'Expansion' | 'Evaluation';
+export type Status = 'Announced' | 'In Progress' | 'Live' | 'Deprecated Old Infra' | 'Unverified';
+export type EvidenceType =
+  | 'Official Announcement'
+  | 'Official Documentation'
+  | 'Smart Contract'
+  | 'Explorer Data'
+  | 'Chainlink Source'
+  | 'Media Report'
+  | 'Social Post'
+  | 'Multiple Sources';
+export type EvidenceLevel = 'High' | 'Medium' | 'Low';
 
 export interface MigrationRecord {
   id: number;
   project: string;
-  category: string;
+  sector: string;
   asset: string;
-  previousInfra: string;
-  newInfra: string;
+  from: string;
+  to: string;
   changeType: ChangeType;
-  announcementDate: string;
-  reason: string;
-  confidence: Confidence;
-  evidenceLink: string;
+  status: Status;
+  announced: string;
+  statedReason: string;
+  evidenceType: EvidenceType;
+  evidenceLevel: EvidenceLevel;
+  source: string;
 }
 
 export interface MetricCard {
@@ -40,7 +52,7 @@ export interface EvidenceRecord {
   sourceType: string;
   project: string;
   claim: string;
-  confidence: Confidence;
+  evidenceLevel: EvidenceLevel;
   link: string;
 }
 
@@ -63,67 +75,77 @@ export const migrations: MigrationRecord[] = [
   {
     id: 1,
     project: 'Virtuals Protocol',
-    category: 'AI / Agents',
+    sector: 'Agent Economy',
     asset: 'VIRTUAL',
-    previousInfra: 'LayerZero',
-    newInfra: 'Chainlink CCIP',
+    from: 'LayerZero',
+    to: 'Chainlink CCIP',
     changeType: 'Migration',
-    announcementDate: '2026-06-XX',
-    reason: 'Security and cross-chain standardization',
-    confidence: 'High',
-    evidenceLink: '#',
+    status: 'Live',
+    announced: '2026-06-10',
+    statedReason: 'Cross-chain standardization and security',
+    evidenceType: 'Official Announcement',
+    evidenceLevel: 'High',
+    source: '#',
   },
   {
     id: 2,
     project: 'Solv Protocol',
-    category: 'BTC / DeFi',
+    sector: 'BTCFi',
     asset: 'SolvBTC',
-    previousInfra: 'LayerZero',
-    newInfra: 'Chainlink CCIP',
+    from: 'LayerZero',
+    to: 'Chainlink CCIP',
     changeType: 'Migration',
-    announcementDate: '2026-06-XX',
-    reason: 'Security review and liquidity unification',
-    confidence: 'High',
-    evidenceLink: '#',
+    status: 'Live',
+    announced: '2026-06-05',
+    statedReason: 'Security review and unified liquidity',
+    evidenceType: 'Multiple Sources',
+    evidenceLevel: 'High',
+    source: '#',
   },
   {
     id: 3,
-    project: 'Re',
-    category: 'RWA / Stablecoin',
+    project: 'Re Protocol',
+    sector: 'RWA',
     asset: 'reUSD',
-    previousInfra: 'LayerZero',
-    newInfra: 'Chainlink CCIP',
+    from: 'LayerZero',
+    to: 'Chainlink CCIP',
     changeType: 'Migration',
-    announcementDate: '2026-XX-XX',
-    reason: 'Exclusive CCIP support',
-    confidence: 'High',
-    evidenceLink: '#',
+    status: 'Announced',
+    announced: '2026-05-20',
+    statedReason: 'Exclusive CCIP integration for RWA compliance',
+    evidenceType: 'Official Announcement',
+    evidenceLevel: 'High',
+    source: '#',
   },
   {
     id: 4,
     project: 'World Chain',
-    category: 'Chain',
+    sector: 'Infrastructure',
     asset: 'N/A',
-    previousInfra: 'N/A',
-    newInfra: 'Chainlink CCIP',
+    from: 'None',
+    to: 'Chainlink CCIP',
     changeType: 'Adoption',
-    announcementDate: '2026-XX-XX',
-    reason: 'Cross-chain interoperability',
-    confidence: 'High',
-    evidenceLink: '#',
+    status: 'Live',
+    announced: '2026-04-18',
+    statedReason: 'Native cross-chain interoperability at launch',
+    evidenceType: 'Chainlink Source',
+    evidenceLevel: 'High',
+    source: '#',
   },
   {
     id: 5,
     project: 'Hedera',
-    category: 'L1 / Enterprise',
+    sector: 'L1',
     asset: 'N/A',
-    previousInfra: 'N/A',
-    newInfra: 'Chainlink CCIP',
+    from: 'None',
+    to: 'Chainlink CCIP',
     changeType: 'Adoption',
-    announcementDate: '2026-XX-XX',
-    reason: 'Enterprise interoperability',
-    confidence: 'Medium',
-    evidenceLink: '#',
+    status: 'In Progress',
+    announced: '2026-03-12',
+    statedReason: 'Institutional-grade interoperability',
+    evidenceType: 'Official Documentation',
+    evidenceLevel: 'Medium',
+    source: '#',
   },
 ];
 
@@ -196,23 +218,23 @@ export const evidenceRecords: EvidenceRecord[] = [
     sourceType: 'Official Announcement',
     project: 'Virtuals Protocol',
     claim: 'VIRTUAL token bridge migrated from LayerZero to Chainlink CCIP',
-    confidence: 'High',
+    evidenceLevel: 'High',
     link: '#',
   },
   {
     id: 2,
-    sourceType: 'Official Announcement',
+    sourceType: 'Multiple Sources',
     project: 'Solv Protocol',
     claim: 'SolvBTC infrastructure transitioned to CCIP for improved security',
-    confidence: 'High',
+    evidenceLevel: 'High',
     link: '#',
   },
   {
     id: 3,
-    sourceType: 'Documentation',
+    sourceType: 'Official Documentation',
     project: 'Hedera',
     claim: 'Hedera integrating Chainlink CCIP for enterprise cross-chain messaging',
-    confidence: 'Medium',
+    evidenceLevel: 'Medium',
     link: '#',
   },
 ];
